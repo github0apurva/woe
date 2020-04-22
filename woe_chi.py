@@ -5,20 +5,10 @@ Created on Sun Apr 19 14:49:50 2020
 @author: Apurva
 """
 
-import numpy as np
-import pandas as pd
-import wget
 
-
-data_url = "https://archive.ics.uci.edu/ml/machine-learning-databases/credit-screening/crx.data"
-wget.download(data_url,'crx.csv')
-crx_base = pd.read_csv("crx.csv", names = ["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","A13","A14","A15","A16"] )
-crx_base.replace('?', np.NaN, inplace = True)
-crx_base['A161']= np.where(crx_base['A16'] == '+' , 1, 0)
-crx_base['A81'] = crx_base['A8'].clip( 0,7)
-crx_base['A111'] = crx_base['A11'].clip( 0,19)
-crx_base['A112'] = crx_base['A11'].clip( 0,15) + 10
-crx_base['A2'] = crx_base['A2'].astype('float')
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------- MAIN METHOD --------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 def cal_woe(x, y, typex = 'cont' , binx = 10 ):
@@ -111,45 +101,7 @@ def cal_woe(x, y, typex = 'cont' , binx = 10 ):
 
 
 
-
-var_param , var_bin_woe = cal_woe (x=crx_base['A2'], y=crx_base['A161'], typex = 'cont', binx = 10  )
-var_param , var_bin_woe = cal_woe (x=crx_base['A111'], y=crx_base['A161'], typex = 'cont', binx = 20  )
-var_param , var_bin_woe = cal_woe (x=crx_base['A1'], y=crx_base['A161'], typex = 'disc' , binx = 20 )
-var_param , var_bin_woe = cal_woe (x=crx_base[['A7','A1','A112']], y=crx_base['A161'], typex = ['disc','disc','cont'] , binx = [10,10,20] )
-
-var_bin_woe['A112']
-
-crx_base.info()
-crx_base.head()
-crx_base['A161'].value_counts()
-crx_base.describe()
-crx_base[['A7','A1','A112']].shape[1]
-
-x1 = crx_base['A7']
-rng = ( x1.max() - x1.min() ) / binx1
-a = ( np.round(( ( x1 - x1.min() ) / rng ),0 )).clip(0 , binx1-1 ).astype('O')
-x1 = a
-bin_range = x1.unique()
-
-1. handle y missing Done
-2. include bin min through index Done
-3. chi square
-
-
-x1 = crx_base['A1']
-y1 = crx_base['A161']
-from scipy.stats import chi2_contingency
-stat, p, dof, expected = chi2_contingency(np.array(pd.crosstab ( y1, x1)))
-print ( "{:.4f}".format(p) )
-
-
-
-d = []
-d.append(c)
-d.append(bin_count)
-d.append("{:.4f}".format(p))
-d.append(dof)
-d.append(stat)
-
-
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------- END METHOD --------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
